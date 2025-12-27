@@ -70,6 +70,15 @@ Generates a Nano ID using the default alphabet and size.
 
 **Note**: This is called "naive" because it uses a simple implementation. Future versions may include optimized implementations with custom alphabets and sizes.
 
+## Performance
+
+```
+$ ERL_LIBS=_build/default/lib/ erlperf --samples 3 'erl_nanoid:naive().'
+WARNING: Dynamic Trace Probes enabled (dtrace detected)
+Code                        ||        QPS       Time
+erl_nanoid:naive().          1    1370 Ki     730 ns
+```
+
 ## Development
 
 ### Building
