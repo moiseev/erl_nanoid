@@ -76,7 +76,7 @@ Generates a Nano ID using the default alphabet and size.
 $ ERL_LIBS=_build/default/lib/ erlperf --samples 3 'erl_nanoid:naive().'
 WARNING: Dynamic Trace Probes enabled (dtrace detected)
 Code                        ||        QPS       Time
-erl_nanoid:naive().          1    1370 Ki     730 ns
+erl_nanoid:naive().          1    1435 Ki     697 ns
 ```
 
 ## Development
