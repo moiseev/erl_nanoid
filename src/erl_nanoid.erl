@@ -7,6 +7,7 @@
 
 -ifdef(TEST).
 -export([bin_foldl/3]).
+-export([pool_size/1]).
 -endif.
 
 -define(ALPHABET, <<"useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict">>).
@@ -118,3 +119,8 @@ bin_foldl_impl(_, Acc, <<>>) ->
     Acc;
 bin_foldl_impl(F, Acc, <<Head, Tail/binary>>) ->
     bin_foldl_impl(F, F(Head, Acc), Tail).
+
+-ifdef(TEST).
+pool_size(#{pool := Pool} = _Iterator) when is_binary(Pool) ->
+    erlang:byte_size(Pool).
+-endif.
