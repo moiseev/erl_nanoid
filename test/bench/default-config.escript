@@ -8,7 +8,14 @@
 main(_) ->
     Report = erlperf:benchmark(
         [
-            #{runner => {erl_nanoid, naive, []}}
+            #{runner => {erl_nanoid, naive, []}},
+            #{
+                init_runner => {erl_nanoid, iterator, []},
+                runner => fun(_Init, It) ->
+                    {_Id, It1} = erl_nanoid:next(It),
+                    It1
+                end
+            }
         ],
         #{report => full},
         undefined
