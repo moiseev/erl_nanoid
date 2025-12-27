@@ -2,6 +2,7 @@
 
 -export([generate/0]).
 
+-export_type([iterator_t/0]).
 -export([iterator/0, next/1]).
 
 -ifdef(TEST).
@@ -14,15 +15,80 @@
 
 -define(POOL_SIZE, 128).
 
--spec generate() -> binary.
+-doc """
+Generates a Nano ID using the default alphabet and size.
+
+Returns a 21-character URL-safe unique ID with ~126 bits of entropy
+(similar to UUID v4). Uses cryptographically strong random number
+generation via `crypto:strong_rand_bytes/1`.
+
+The default alphabet contains 64 characters: A-Z, a-z, 0-9, `_`, and `-`.
+
+## Returns
+
+A binary containing the generated ID.
+""".
+-spec generate() -> binary().
 generate() ->
     Randomness = crypto:strong_rand_bytes(?SIZE),
     from_randomness(Randomness).
 
+-opaque iterator_t() :: #{pool => binary()}.
+
+-doc """
+Creates an iterator with a pre-generated randomness pool.
+
+Use this function when generating multiple IDs for better performance.
+The iterator maintains a pool of random bytes that can be used to
+generate multiple IDs without repeatedly calling the crypto module.
+
+The iterator should be used with `next/1` to generate IDs.
+
+## Returns
+
+An opaque iterator object.
+
+## See Also
+
+`next/1`
+""".
+-spec iterator() -> iterator_t().
 iterator() ->
     Pool = crypto:strong_rand_bytes(?SIZE * ?POOL_SIZE),
     #{pool => Pool}.
 
+-doc """
+Generates the next Nano ID from an iterator.
+
+Takes an iterator (created by `iterator/0` or returned from a
+previous call to this function) and returns a tuple containing the
+generated ID and a new iterator state.
+
+The iterator automatically replenishes its randomness pool when exhausted,
+making it safe to use indefinitely.
+
+## Example
+
+```erlang
+It = erl_nanoid:iterator(),
+{Id1, It1} = erl_nanoid:next(It),
+{Id2, It2} = erl_nanoid:next(It1).
+```
+
+## Parameters
+
+- `Iterator`: The iterator object.
+
+## Returns
+
+A tuple `{Id, NewIterator}` where `Id` is the generated binary
+and `NewIterator` is the updated iterator state.
+
+## See Also
+
+`iterator/0`
+""".
+-spec next(iterator_t()) -> {binary(), iterator_t()}.
 next(#{pool := Pool} = _Iterator) ->
     Pool1 =
         case erlang:byte_size(Pool) < ?SIZE of

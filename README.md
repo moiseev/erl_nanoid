@@ -95,7 +95,7 @@ Creates an iterator with a pre-generated randomness pool for efficient batch ID 
 - **Use case**: When generating multiple IDs, this approach is more efficient than calling `generate/0` repeatedly
 
 ```erlang
--spec iterator() -> iterator().
+-spec iterator() -> iterator_t().
 ```
 
 ### `next/1`
@@ -106,7 +106,7 @@ Generates the next Nano ID from an iterator.
 - **Returns**: A tuple `{Id, NewIterator}` where `Id` is the generated binary and `NewIterator` is the updated iterator state
 
 ```erlang
--spec next(iterator()) -> {binary(), iterator()}.
+-spec next(iterator_t()) -> {binary(), iterator_t()}.
 ```
 
 ## Performance
