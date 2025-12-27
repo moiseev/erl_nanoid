@@ -1,3 +1,8 @@
+setup:
+    @echo "Installing git hooks..."
+    pre-commit install
+    @echo "Setup complete!"
+
 compile:
     rebar3 compile
 
@@ -9,3 +14,6 @@ erlperf: compile
 
 test *ARGS:
     rebar3 ct --verbose --readable=false {{ ARGS }}
+
+format:
+    rebar3 fmt

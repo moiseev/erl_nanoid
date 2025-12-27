@@ -10,4 +10,4 @@
     {modules, []},
     {licenses, ["MIT"]},
     {links, []}
- ]}.
+]}.

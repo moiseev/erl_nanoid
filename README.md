@@ -101,6 +101,21 @@ This project uses [erlfmt](https://github.com/WhatsApp/erlfmt) for code formatti
 rebar3 fmt
 ```
 
+### Git Hooks
+
+To automatically check formatting before commits, install [pre-commit](https://pre-commit.com/):
+
+```bash
+# Install pre-commit (one-time setup)
+brew install pre-commit  # macOS
+# or: pip install pre-commit
+
+# Install the git hooks (run in project directory)
+pre-commit install
+```
+
+The hook will run `rebar3 fmt --check` before each commit.
+
 ## Comparison with Other Implementations
 
 For a more full-featured Elixir implementation with additional options (custom alphabets, custom sizes), see [nanoid](https://hex.pm/packages/nanoid).
