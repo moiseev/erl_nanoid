@@ -1,5 +1,43 @@
 -module(erl_nanoid).
 
+-moduledoc """
+A Nano ID generator for Erlang.
+
+Nano ID is a tiny, secure, URL-friendly unique string ID generator
+that creates compact, URL-safe IDs with strong randomness guarantees.
+This implementation provides 21-character IDs with ~126 bits of entropy,
+comparable to UUID v4 but shorter and more URL-friendly.
+
+## Features
+
+- **Compact**: 21 characters by default (vs 36 for UUID)
+- **URL-safe**: Uses an alphabet of `A-Z`, `a-z`, `0-9`, `_`, and `-`
+- **Secure**: Uses `crypto:strong_rand_bytes/1` for cryptographically strong randomness
+- **Fast**: Iterator-based API for efficient batch generation
+
+## Usage
+
+### Single ID Generation
+
+```erlang
+Id = erl_nanoid:generate().
+% => <<"V1StGXR8_Z5jdHi6B-myT">>
+```
+
+### Batch Generation (More Efficient)
+
+When generating multiple IDs, use the iterator API for better performance:
+
+```erlang
+It = erl_nanoid:iterator(),
+{Id1, It1} = erl_nanoid:next(It),
+{Id2, It2} = erl_nanoid:next(It1),
+{Id3, _It3} = erl_nanoid:next(It2).
+```
+
+The iterator maintains a pool of random bytes, reducing calls to the crypto module.
+""".
+
 -export([generate/0]).
 
 -export_type([iterator_t/0]).
@@ -34,6 +72,15 @@ generate() ->
     Randomness = crypto:strong_rand_bytes(?SIZE),
     from_randomness(Randomness).
 
+-doc """
+Opaque type representing an iterator for batch ID generation.
+
+The iterator maintains a pool of random bytes for efficient generation
+of multiple Nano IDs. Create an iterator with `iterator/0` and use it
+with `next/1` to generate IDs.
+
+The internal structure is opaque and should not be accessed directly.
+""".
 -opaque iterator_t() :: #{pool => binary()}.
 
 -doc """
