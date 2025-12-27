@@ -35,9 +35,9 @@ rebar3 compile
 ## Usage
 
 ```erlang
-1> erl_nanoid:naive().
+1> erl_nanoid:generate().
 <<"TAHpcYCYdmrdPYlxxKs1-">>
-2> erl_nanoid:naive().
+2> erl_nanoid:generate().
 <<"3-q21YGrFjxa4u6ftT_Sd">>
 ```
 
@@ -67,14 +67,14 @@ or
 -export([create_user/1]).
 
 create_user(Name) ->
-    UserId = erl_nanoid:naive(),
+    UserId = erl_nanoid:generate(),
     %% Use the generated ID
     {ok, #{id => UserId, name => Name}}.
 ```
 
 ## API
 
-### `naive/0`
+### `generate/0`
 
 Generates a Nano ID using the default alphabet and size.
 
@@ -84,7 +84,7 @@ Generates a Nano ID using the default alphabet and size.
 - **Entropy**: ~126 bits (similar to UUID v4)
 
 ```erlang
--spec naive() -> binary().
+-spec generate() -> binary().
 ```
 
 ### `iterator/0`
@@ -92,7 +92,7 @@ Generates a Nano ID using the default alphabet and size.
 Creates an iterator with a pre-generated randomness pool for efficient batch ID generation.
 
 - **Returns**: An iterator object.
-- **Use case**: When generating multiple IDs, this approach is more efficient than calling `naive/0` repeatedly
+- **Use case**: When generating multiple IDs, this approach is more efficient than calling `generate/0` repeatedly
 
 ```erlang
 -spec iterator() -> iterator().
@@ -115,7 +115,7 @@ Generates the next Nano ID from an iterator.
 $ just bench
 Code         ||   Samples       Avg   StdDev    Median      P99  Iteration    Rel
 iterator      1         3   2052 Ki    0.61%   2058 Ki  2061 Ki     487 ns   100%
-naive         1         3   1325 Ki    0.73%   1330 Ki  1331 Ki     754 ns    65%
+generate      1         3   1325 Ki    0.73%   1330 Ki  1331 Ki     754 ns    65%
 ```
 
 ## Development

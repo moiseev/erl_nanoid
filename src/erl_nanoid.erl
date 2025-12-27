@@ -1,6 +1,6 @@
 -module(erl_nanoid).
 
--export([naive/0]).
+-export([generate/0]).
 
 -export([iterator/0, next/1]).
 
@@ -14,8 +14,8 @@
 
 -define(POOL_SIZE, 128).
 
--spec naive() -> binary.
-naive() ->
+-spec generate() -> binary.
+generate() ->
     Randomness = crypto:strong_rand_bytes(?SIZE),
     from_randomness(Randomness).
 

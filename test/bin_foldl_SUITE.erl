@@ -145,7 +145,7 @@ fold_function_and_accumulator() ->
         {fun(_Byte, Acc) when is_integer(Acc) -> Acc + 1 end, 0},
         %% Collect bytes into a list
         {fun(Byte, Acc) when is_list(Acc) -> [Byte | Acc] end, []},
-        %% Build a binary (like in naive/0)
+        %% Build a binary (like in generate/0)
         {fun(Byte, Acc) when is_binary(Acc) -> <<Acc/binary, Byte>> end, <<>>},
         %% XOR all bytes
         {fun(Byte, Acc) when is_integer(Acc) -> Byte bxor Acc end, 0},

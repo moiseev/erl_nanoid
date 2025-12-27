@@ -9,8 +9,8 @@ main(_) ->
     Report = erlperf:benchmark(
         [
             #{
-                label => "naive",
-                runner => {erl_nanoid, naive, []}
+                label => "generate",
+                runner => {erl_nanoid, generate, []}
             },
             #{
                 label => "iterator",

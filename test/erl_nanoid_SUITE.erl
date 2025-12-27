@@ -42,13 +42,13 @@ end_per_suite(_Config) ->
 
 %% @doc Test that generated IDs have the correct length
 correct_length(_Config) ->
-    Id = erl_nanoid:naive(),
+    Id = erl_nanoid:generate(),
     ?assertEqual(?ID_LENGTH, byte_size(Id)).
 
 %% @doc Test that generated IDs are unique
 generates_unique_ids(_Config) ->
     Count = 10000,
-    Ids = [erl_nanoid:naive() || _ <- lists:seq(1, Count)],
+    Ids = [erl_nanoid:generate() || _ <- lists:seq(1, Count)],
     UniqueIds = sets:from_list(Ids),
     ?assertEqual(Count, sets:size(UniqueIds)).
 
@@ -115,7 +115,7 @@ flat_distribution(_Config) ->
 build_character_histogram(Count) ->
     lists:foldl(
         fun(_I, Histogram) ->
-            Id = erl_nanoid:naive(),
+            Id = erl_nanoid:generate(),
             update_histogram_with_id(Id, Histogram)
         end,
         #{},
