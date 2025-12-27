@@ -41,6 +41,25 @@ rebar3 compile
 <<"3-q21YGrFjxa4u6ftT_Sd">>
 ```
 
+or
+
+```erlang
+1> It = erl_nanoid:iterator().
+#{pool =>
+      <<193,229,141,138,225,104,40,210,183,103,239,44,211,52,
+        10,49,150,222,18,81,255,47,219,145,158,142,184,84,...>>}
+2> {Id0, It0} = erl_nanoid:next(It).
+{<<"sU96IWWPqHZ_Xj6fpRP0t">>,
+ #{pool =>
+       <<47,219,145,158,142,184,84,134,89,175,76,123,218,245,
+         45,22,105,163,112,68,181,126,87,126,184,79,...>>}}
+3> {Id1, It1} = erl_nanoid:next(It0).
+{<<"ZK0R8v7oAZ1zCkGpODbnk">>,
+ #{pool =>
+       <<126,87,126,184,79,222,242,7,116,87,251,79,172,33,31,
+         112,52,68,37,113,208,81,138,226,63,255,...>>}}
+```
+
 ### In Your Application
 
 ```erlang
@@ -68,15 +87,35 @@ Generates a Nano ID using the default alphabet and size.
 -spec naive() -> binary().
 ```
 
-**Note**: This is called "naive" because it uses a simple implementation. Future versions may include optimized implementations with custom alphabets and sizes.
+### `iterator/0`
+
+Creates an iterator with a pre-generated randomness pool for efficient batch ID generation.
+
+- **Returns**: An iterator object.
+- **Use case**: When generating multiple IDs, this approach is more efficient than calling `naive/0` repeatedly
+
+```erlang
+-spec iterator() -> iterator().
+```
+
+### `next/1`
+
+Generates the next Nano ID from an iterator.
+
+- **Parameter**: Iterator object (as returned by `iterator/0` or a previous `next/1` call)
+- **Returns**: A tuple `{Id, NewIterator}` where `Id` is the generated binary and `NewIterator` is the updated iterator state
+
+```erlang
+-spec next(iterator()) -> {binary(), iterator()}.
+```
 
 ## Performance
 
 ```
-$ ERL_LIBS=_build/default/lib/ erlperf --samples 3 'erl_nanoid:naive().'
-WARNING: Dynamic Trace Probes enabled (dtrace detected)
-Code                        ||        QPS       Time
-erl_nanoid:naive().          1    1435 Ki     697 ns
+$ just bench
+Code         ||   Samples       Avg   StdDev    Median      P99  Iteration    Rel
+iterator      1         3   2052 Ki    0.61%   2058 Ki  2061 Ki     487 ns   100%
+naive         1         3   1325 Ki    0.73%   1330 Ki  1331 Ki     754 ns    65%
 ```
 
 ## Development
